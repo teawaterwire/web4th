@@ -1,0 +1,23 @@
+{:source-paths ["src"]
+
+ :dependencies
+ [[re-frame "1.2.0"]
+  [funcool/promesa "8.0.450"]
+
+  [binaryage/devtools "1.0.6"]
+  [re-frisk "1.5.2"]]
+
+ :builds
+ {:app
+  {:target :browser
+   :output-dir "resources/public/js/compiled"
+   :asset-path "/js/compiled"
+   :module-hash-names 10
+   :modules {:app
+             {:init-fn app.core/init}}
+   :devtools {:preloads [re-frisk.preload]}
+   :dev {:compiler-options
+         {:infer-externs :auto}}}}
+ 
+ :dev-http
+ {8280 "resources/public"}}

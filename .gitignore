@@ -1,0 +1,12 @@
+compiled/
+/*.log
+
+.clj-kondo
+.cache
+.calva
+.lsp
+.env.edn
+
+/node_modules/
+
+/.shadow-cljs/
