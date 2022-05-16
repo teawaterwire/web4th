@@ -11,16 +11,15 @@
    ["@magic-ext/webauthn" :refer [WebAuthnExtension]]))
 
 (defonce magic (new Magic (:magic-key env)
-                (clj->js {;;   :network "ropsten" 
-                          :extensions [(new WebAuthnExtension)]})))
+                (clj->js {:extensions [(new WebAuthnExtension)]})))
 
 (defonce magic-provider (new (.. ethers -providers -Web3Provider) (.-rpcProvider magic)))
 
 
 (rf/reg-event-fx
  ::init
- (fn []
-   {:db {::init? true}
+ (fn [{db :db}]
+   {:db (assoc db ::init? true)
     ::init nil}))
 
 (rf/reg-event-fx

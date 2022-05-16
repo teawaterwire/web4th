@@ -49,7 +49,7 @@
     (matrix-sync room-id)
     (.. matrix-client (startClient #js {:initialSyncLimit 20}))
     (rf/dispatch [:set ::room-id room-id])
-    (if available? (rf/dispatch [::send-action :app.actions.onboarding/onboarding magic-username]))
+    (if available? (actions/send :app.actions.onboarding/onboarding [magic-username]))
     (.-access_token login-resp-js)))
 
 (defn fill-state [state-to-fill db]
@@ -65,12 +65,6 @@
          state' (merge state (fill-state state-to-fill db))
          event' (merge-with merge event {:content {:component component :state state' :save save}})]
      {:db (update-in db [::timeline] (fn [timeline] (conj (or timeline []) event')))})))
-
-(rf/reg-event-fx
- ::send-action
- (fn [{db :db} [_ action & args]]
-   {::send {:room-id (::room-id db)
-            :burp (js/JSON.stringify (clj->js (actions/->edn action db args)))}}))
 
 (rf/reg-event-fx
  ::toggle-chat-with-support
@@ -144,12 +138,11 @@
                 :onKeyDown #(if (= (.-key %) "Enter") (rf/dispatch [::send-burp]))}]
        [:div {:class "py-2 place-content-between flex"}
         [:div
-         [:button {:class "btn-blue mr-2"
-                   :on-click #(rf/dispatch [::send-action ::receive])} "Receive"]
-         [:button {:class "btn-blue mr-2 disabled:opacity-50"
-                   :on-click #(rf/dispatch [::send-action ::balance])} "Balance"]
-         [:button {:class "btn-blue mr-2 disabled:opacity-50"
-                   :on-click #(rf/dispatch [::send-action ::send])} "Send"]]
+         (for [[label {:keys [action primary?]}] @(rf/subscribe [:app.actions.entrypoint/label->])
+               :when primary?]
+           ^{:key label}
+           [:button {:class "btn-blue mr-2"
+                     :on-click #(actions/send action)} label])]
         [:button {:class "btn-gray"
                   :on-click #(rf/dispatch [::toggle-chat-with-support])}
          (if @(rf/subscribe [:get ::support?])

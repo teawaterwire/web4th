@@ -2,11 +2,17 @@
   (:require 
    [app.actions.entrypoint :as actions]))
 
+(actions/add-label "onboarding" ::onboarding false)
+
 (defn c-onboarding [state]
   [:div.text-center
    [:span.font-bold.text-xl "Welcome to a  "
-    [:a.underline {:href "https://mirror.xyz/0x7A0F0B39FeA907Deb70A483387Fc6d42fa99adFD/mvqOkcw0ABBgRjSD49Pb_V3lbpQMxxi68KCHabYj5RA" :target "_blank"} "web4ᵗʰ"]
+    [:a.underline {:href "https://mirror.xyz/penseur.eth/mvqOkcw0ABBgRjSD49Pb_V3lbpQMxxi68KCHabYj5RA" :target "_blank"} "web4ᵗʰ"]
     " app!"]
+   [:br]
+   [:div "You can start a game of 🏓 "
+    [:button {:class "btn-blue mt-2 mb-2"
+              :on-click #(actions/send :app.actions.pingpong/ping)} "Ping"]]
    [:br]
    [:div "Your username: " (:username state)]
    [:br]
