@@ -3,16 +3,8 @@
 
 (defmulti ->edn (fn [action] action))
 
-(defmulti ->component identity)
-
-(defn add-label [label action primary?]
-  (rf/dispatch [:set ::label-> label {:action action :primary? primary?}]))
-
-(rf/reg-sub
- ::label->
- :<- [:get ::label->]
- (fn [label->]
-   label->))
+(defn add-primary-action [action label & [{:keys [default?]}]]
+  (rf/dispatch [:set ::label->primary-action label {:action action :default? default?}]))
 
 (defn send [action & [args]]
   (rf/dispatch [::send-action action args]))
@@ -20,5 +12,6 @@
 (rf/reg-event-fx
  ::send-action
  (fn [{db :db} [_ action args]]
-   {:app.matrix/send {:room-id (:app.matrix/room-id db)
-                      :burp (js/JSON.stringify (clj->js (->edn action db args)))}}))
+   (let [burp (select-keys (->edn action db args) [:action :state])]
+     {:app.matrix/send {:room-id (:app.matrix/room-id db)
+                        :burp (pr-str burp)}})))

@@ -2,8 +2,6 @@
   (:require 
    [app.actions.entrypoint :as actions]))
 
-(actions/add-label "onboarding" ::onboarding false)
-
 (defn c-onboarding [state]
   [:div.text-center
    [:span.font-bold.text-xl "Welcome to a  "
@@ -12,7 +10,7 @@
    [:br]
    [:div "You can start a game of 🏓 "
     [:button {:class "btn-blue mt-2 mb-2"
-              :on-click #(actions/send :app.actions.pingpong/ping)} "Ping"]]
+              :on-click #(actions/send :app.actions.pingpong/pong)} "Ping"]]
    [:br]
    [:div "Your username: " (:username state)]
    [:br]
@@ -20,7 +18,6 @@
 
 (defmethod actions/->edn ::onboarding
   [_ _ args]
-  {:component "c-onboarding"
+  {:action ::onboarding
+   :component c-onboarding
    :state {:username (first args)}})
-
-(defmethod actions/->component "c-onboarding" [] c-onboarding)

@@ -4,8 +4,6 @@
 
 ;; ping
 
-(actions/add-label "Ping" ::ping true)
-
 (defn c-ping [_state]
   [:div.text-center
    "🏓 "
@@ -14,13 +12,12 @@
 
 (defmethod actions/->edn ::ping
   [_action _db _args]
-  {:component "c-ping"})
+  {:action ::ping
+   :component c-ping})
 
-(defmethod actions/->component "c-ping" [] c-ping)
+(actions/add-primary-action ::ping "Ping" {:default? true})
 
 ;; pong
-
-(actions/add-label "Pong" ::pong false)
 
 (defn c-pong [_state]
   [:div.text-center
@@ -30,6 +27,7 @@
 
 (defmethod actions/->edn ::pong
   [_action _db _args]
-  {:component "c-pong"})
+  {:action ::pong
+   :component c-pong})
 
-(defmethod actions/->component "c-pong" [] c-pong)
+(actions/add-primary-action ::pong "Pong")

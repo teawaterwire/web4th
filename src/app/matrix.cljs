@@ -1,5 +1,6 @@
 (ns app.matrix
   (:require 
+   [cljs.reader]
    [promesa.core :as p]
    [re-frame.core :as rf]
    [goog.object]
@@ -61,9 +62,9 @@
 (rf/reg-event-fx
  ::add-to-timeline
  (fn [{db :db} [_ event]]
-   (let [{:keys [state-to-fill component state save]} (try (j->c (js/JSON.parse (-> event :content :body))) (catch js/Object _ nil))
+   (let [{:keys [state-to-fill action state]} (try (cljs.reader/read-string (-> event :content :body)) (catch js/Object _ nil)) 
          state' (merge state (fill-state state-to-fill db))
-         event' (merge-with merge event {:content {:component component :state state' :save save}})]
+         event' (merge-with merge event {:content {:action action :state state'}})]
      {:db (update-in db [::timeline] (fn [timeline] (conj (or timeline []) event')))})))
 
 (rf/reg-event-fx
@@ -109,23 +110,23 @@
 (defn messages []
   [:div {:class "h-4/5 overflow-y-auto pb-4 rounded-t-xl bg-gradient-to-r from-gray-50 to-gray-100 px-4"}
    (for [{:keys [:event_id :content :type :sender :origin_server_ts]} @(rf/subscribe [:get ::timeline])
-         :let [{:keys [body component state]} content]
+         :let [{:keys [body state action]} content]
          :when (= type "m.room.message")]
      ^{:key event_id}
      [:div {:class (str "group relative grid my-2"
-                        (if (some? component)
+                        (if (some? action)
                           " place-content-center bg-gradient-to-r from-yellow-50 to-yellow-100 rounded p-3 font-sans"))
             :ref #(when % (.scrollIntoView %))}
       [:div {:class "group-hover:visible invisible z-10 absolute text-xs text-white -bottom-2 text-center w-full"}
        [:span {:class "bg-pink-400 px-1"} (.toLocaleString (new js/Date origin_server_ts))]]
-      (if (nil? component)
+      (if (nil? action)
         [:div
          {:class (str "bg-gradient-to-r p-2 rounded "
                       (if (not= sender matrix-support-id)
                         "text-right place-self-end from-green-100 to-blue-200 ml-16"
                         "place-self-start from-red-100 to-purple-200 mr-16"))}
          body]
-        [(actions/->component component) state])])])
+        [(:component (actions/->edn action)) state])])])
 
 (defn chat []
   [:<> 
@@ -138,8 +139,8 @@
                 :onKeyDown #(if (= (.-key %) "Enter") (rf/dispatch [::send-burp]))}]
        [:div {:class "py-2 place-content-between flex"}
         [:div
-         (for [[label {:keys [action primary?]}] @(rf/subscribe [:app.actions.entrypoint/label->])
-               :when primary?]
+         (for [[label {:keys [action default?]}] @(rf/subscribe [:get :app.actions.entrypoint/label->primary-action])
+               :when default?]
            ^{:key label}
            [:button {:class "btn-blue mr-2"
                      :on-click #(actions/send action)} label])]
