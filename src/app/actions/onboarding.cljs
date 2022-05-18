@@ -16,8 +16,7 @@
    [:br]
    [:div.italic "Need help? Just start a chat with support 🧇"]])
 
-(defmethod actions/->edn ::onboarding
+(defmethod actions/get-action ::onboarding
   [_ _ args]
-  {:action ::onboarding
-   :component c-onboarding
+  {:component c-onboarding
    :state {:username (first args)}})

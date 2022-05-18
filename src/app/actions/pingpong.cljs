@@ -10,10 +10,9 @@
    [:button {:class "btn-blue"
               :on-click #(actions/send ::pong)} "Ping"]])
 
-(defmethod actions/->edn ::ping
+(defmethod actions/get-action ::ping
   [_action _db _args]
-  {:action ::ping
-   :component c-ping})
+  {:component c-ping})
 
 (actions/add-primary-action ::ping "Ping" {:default? true})
 
@@ -25,9 +24,8 @@
               :on-click #(actions/send ::ping)} "Pong"]
    " 🏓"])
 
-(defmethod actions/->edn ::pong
+(defmethod actions/get-action ::pong
   [_action _db _args]
-  {:action ::pong
-   :component c-pong})
+  {:component c-pong})
 
 (actions/add-primary-action ::pong "Pong")

@@ -1,7 +1,7 @@
 (ns app.actions.entrypoint
   (:require [re-frame.core :as rf]))
 
-(defmulti ->edn (fn [action] action))
+(defmulti get-action (fn [action] action))
 
 (defn add-primary-action [action label & [{:keys [default?]}]]
   (rf/dispatch [:set ::label->primary-action label {:action action :default? default?}]))
@@ -12,6 +12,6 @@
 (rf/reg-event-fx
  ::send-action
  (fn [{db :db} [_ action args]]
-   (let [burp (select-keys (->edn action db args) [:action :state])]
+   (let [burp (merge {:action action} (select-keys (get-action action db args) [:state]))]
      {:app.matrix/send {:room-id (:app.matrix/room-id db)
                         :burp (pr-str burp)}})))

@@ -126,7 +126,7 @@
                         "text-right place-self-end from-green-100 to-blue-200 ml-16"
                         "place-self-start from-red-100 to-purple-200 mr-16"))}
          body]
-        [(:component (actions/->edn action)) state])])])
+        [(:component (actions/get-action action)) state])])])
 
 (defn chat []
   [:<> 
