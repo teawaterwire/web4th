@@ -9,13 +9,11 @@
    [app.actions.entrypoint :as actions]
    ["matrix-js-sdk" :as matrix]))
 
-(defonce matrix-client (matrix/createClient "http://localhost:8008"))
+(defonce matrix-client (matrix/createClient (str "https://" (:matrix-domain env))))
 
-(def domain ":localhost")
+(def matrix-bot-id (str "@" (:app-id env) ":" (:matrix-domain env)))
 
-(def matrix-bot-id (str "@" (:app-id env) domain))
-
-(def matrix-support-id (str "@" (:support-id env) domain))
+(def matrix-support-id (str "@" (:support-id env) ":" (:matrix-domain env)))
 
 (defn matrix-register [username password]
   (p/let [session-id (-> (.. matrix-client (registerRequest #js {:username username :password password}))
@@ -29,7 +27,7 @@
                                             :visibility "private"
                                             :invite #js [matrix-bot-id]}))
          (p/catch #()))
-     (p/let [room-id-js (.. matrix-client (getRoomIdForAlias (str "#" alias domain)))
+     (p/let [room-id-js (.. matrix-client (getRoomIdForAlias (str "#" alias ":" (:matrix-domain env))))
              room-id (.-room_id room-id-js)
              joined-js (.. matrix-client (getJoinedRoomMembers room-id))
              support? (some? (goog.object/getValueByKeys joined-js "joined" matrix-support-id))]
