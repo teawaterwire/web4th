@@ -2,16 +2,16 @@
 
 ## install
 
-- `npm install`
-- `mv src/app/.env.edn.example src/app/.env.edn`
-- get "publishable api key" from https://magic.link/ and enable "WebAuthn" in the "Passwordless login" section
-- go to https://app.element.io/#/register and change "matrix.org" to "https://matrix.teawaterwire.dev"
-- register a username for `app-id`
-- sign out and register another username for `support-id`
-- fill `.env.edn` with these values
-- `npm run dev`
-- open http://localhost:8280/
-- log in with a username and Touch ID on desktop (https://magic.link/docs/login-methods/webauthn)
+1. `npm install`
+2. `mv src/app/.env.edn.example src/app/.env.edn`
+3. get "publishable api key" from https://magic.link/ and enable "WebAuthn" in the "Passwordless login" section
+4. go to https://app.element.io/#/register and change "matrix.org" to "https://matrix.teawaterwire.dev"
+5. register a username for `app-id`
+6. sign out and register another username for `support-id`
+7. fill `.env.edn` with these values
+8. `npm run dev`
+9. open http://localhost:8280/
+10. log in with a username and Touch ID on desktop (https://magic.link/docs/login-methods/webauthn)
 
 ## develop
 
@@ -19,7 +19,7 @@ it's all about adding actions:
 
 1. create a file under `app/actions` and add it to `registry.cljs`
 2. create a component that will be displayed when the action is triggered
-3. register action by implementing the multimethod `actions/get-action`
+3. register the action by implementing the multimethod `actions/get-action`
 4. optionally use `actions/add-primary-action` to make it a primary action (available from the command bar)
 
 hello world example:
