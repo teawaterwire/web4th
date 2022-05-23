@@ -27,18 +27,19 @@
  (fn [{db :db}]
    {::login-webauthn (::username db)}))
 
+(defn matrix-login [username]
+  (p/let [metadata-js (.. magic -user (getMetadata))
+          {:keys [:publicAddress] :as metadata} (j->c metadata-js)
+          signer (.getSigner magic-provider)
+          password (.signMessage signer "💩")
+          access-token (matrix/matrix-login (str/lower-case publicAddress) password {:magic-username username})]
+    (rf/dispatch [:set ::user (assoc metadata :username username :access-token access-token)])))
+
 (defn magic-loging-webauthn [username]
   (->
    (.. magic -webauthn (registerNewUser #js {:username username}))
    (p/catch #(.. magic -webauthn (login #js {:username username})))
-   (p/then
-    (fn []
-      (p/let [metadata-js (.. magic -user (getMetadata))
-              {:keys [:publicAddress] :as metadata} (j->c metadata-js)
-              signer (.getSigner magic-provider)
-              password (.signMessage signer "💩")
-              access-token (matrix/matrix-login (str/lower-case publicAddress) password {:magic-username username})]
-        (rf/dispatch [:set ::user (assoc metadata :username username :access-token access-token)]))))
+   (p/then #(matrix-login username))
    (p/finally
      #(rf/dispatch [:set ::init? false]))))
 
@@ -50,10 +51,11 @@
  ::init
  (fn []
    (p/let [logged? (.. magic -user (isLoggedIn))]
-     (if logged?
-       (p/let [metadata (.. magic -webauthn (getMetadata))]
-         (magic-loging-webauthn (.-username metadata)))
-       (rf/dispatch [:set ::init? false])))))
+          (p/do!
+           (if logged?
+             (p/let [metadata (.. magic -webauthn (getMetadata))]
+               (matrix-login (.-username metadata))))
+           (rf/dispatch [:set ::init? false])))))
 
 (rf/reg-event-fx
  ::logout
