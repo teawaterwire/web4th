@@ -8,13 +8,18 @@
     [:a.underline {:href "https://mirror.xyz/penseur.eth/mvqOkcw0ABBgRjSD49Pb_V3lbpQMxxi68KCHabYj5RA" :target "_blank"} "web4ᵗʰ"]
     " app!"]
    [:br]
-   [:div "You can start a game of 🏓 "
-    [:button {:class "btn-blue mt-2 mb-2"
-              :on-click #(actions/send :app.actions.pingpong/pong)} "Ping"]]
+   [:div.text-left.mt-2 
+    "You can say "
+    [:button {:class "text-blue-500 hover:underline font-bold"
+              :on-click #(actions/send :app.actions.examples.hello/hello)} "Hello"]
+    ", "  "start a game of "
+    [:button {:class "text-blue-500 hover:underline font-bold"
+              :on-click #(actions/send :app.actions.examples.pingpong/pong)} "Ping"]
+    " or create a "
+    [:button {:class "text-blue-500 hover:underline font-bold"
+              :on-click #(actions/send :app.actions.examples.todolist/todos)} "Todo list"]]
    [:br]
-   [:div "Your username: " (:username state)]
-   [:br]
-   [:div.italic "Need help? Just start a chat with support 🧇"]])
+   [:div.italic "Need help " (:username state) "? Just start a chat with support"]])
 
 (defmethod actions/get-action ::onboarding
   [_ _ args]

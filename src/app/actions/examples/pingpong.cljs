@@ -1,4 +1,4 @@
-(ns app.actions.pingpong
+(ns app.actions.examples.pingpong
   (:require 
    [app.actions.entrypoint :as actions]))
 
