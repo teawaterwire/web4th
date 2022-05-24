@@ -3,6 +3,9 @@
 
 (defmulti get-action (fn [action] action))
 
+(defmethod get-action :default [action]
+  {:component (fn [] [:div [:code (pr-str action)] " not registered"])})
+
 (defn add-primary-action [action label & [{:keys [default?]}]]
   (rf/dispatch [:set ::label->primary-action label {:action action :default? default?}]))
 
