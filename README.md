@@ -9,15 +9,15 @@ this repository is meant to be used as a starter kit for those willing to try we
 ## install
 
 1. `npm install`
-2. `mv src/app/.env.edn.example src/app/.env.edn`
-3. get "publishable api key" from https://magic.link/ and enable "WebAuthn" in the "Passwordless login" section
-4. go to https://app.element.io/#/register and change "matrix.org" to "https://matrix.teawaterwire.dev"
-5. register a username for `app-id`
-6. sign out and register another username for `support-id`
-7. fill `.env.edn` with these values
-8. `npm run dev`
-9. open http://localhost:8280/
-10. log in with a username and Touch ID on desktop (https://magic.link/docs/login-methods/webauthn)
+2. get "publishable api key" from https://magic.link/ and enable "WebAuthn" in the "Passwordless login" section
+3. go to https://app.element.io/#/register and change "matrix.org" to "https://matrix.teawaterwire.dev"
+4. register a username for `app-id`
+5. sign out and register another username for `support-id`
+6. fill `env` in `config.cljs` with these values (magic-key, app-id, support-id)
+7. `npm run dev`
+8. open http://localhost:8280/
+9. log in with a username and Touch ID on desktop (https://magic.link/docs/login-methods/webauthn)
+10. profit
 
 ## develop
 
