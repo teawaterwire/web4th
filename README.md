@@ -156,7 +156,7 @@ using [Cloudflare Pages](https://pages.cloudflare.com/) it's as simple as connec
 >
 > Root directory: `/`
 >
-> Environment variables: `None` <--- TODO, closure defines
+> Environment variables: `NODE_VERSION` = 16
 
 click "Save and Deploy" and voilà 💫
 
