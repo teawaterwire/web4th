@@ -1,6 +1,7 @@
 (ns app.matrix
   (:require 
    [cljs.reader]
+   [clojure.string :as str]
    [promesa.core :as p]
    [re-frame.core :as rf]
    [goog.object]
@@ -93,9 +94,27 @@
 (rf/reg-event-fx
  ::send-burp
  (fn [{db :db}]
-   {::send {:room-id (::room-id db)
-            :burp (::burp db)
-            :on-success [:set ::burp nil]}}))
+   (if-not (str/blank? (::burp db))
+     {::send {:room-id (::room-id db)
+              :burp (::burp db)
+              :on-success [:set ::burp nil]}})))
+
+(rf/reg-sub
+ ::available-actions
+ :<- [:get :app.actions.entrypoint/label->primary-action]
+ :<- [:get ::burp]
+ (fn [[label->action burp]]
+   (let [default-actions (->> label->action
+                              (filter (fn [[_ {:keys [:default?]}]] default?)))
+         primary-actions (->> label->action
+                              (filter (fn [[label]]
+                                        (apply str/includes? (map str/lower-case [label burp])))))
+         available-actions (cond
+                             (str/blank? burp) default-actions
+                             (< (count burp) 3) default-actions
+                             (empty? primary-actions) default-actions
+                             :else primary-actions)]
+     (sort-by key > available-actions))))
 
 (rf/reg-fx
  ::send
@@ -137,8 +156,7 @@
                 :onKeyDown #(if (= (.-key %) "Enter") (rf/dispatch [::send-burp]))}]
        [:div {:class "py-2 place-content-between flex"}
         [:div
-         (for [[label {:keys [action default?]}] @(rf/subscribe [:get :app.actions.entrypoint/label->primary-action])
-               :when default?]
+         (for [[label {:keys [action]}] @(rf/subscribe [::available-actions])]
            ^{:key label}
            [:button {:class "btn-blue mr-2"
                      :on-click #(actions/send action)} label])]
