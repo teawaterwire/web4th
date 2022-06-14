@@ -26,7 +26,14 @@
     (p/do!
      (-> (.. matrix-client (createRoom #js {:room_alias_name alias
                                             :visibility "private"
-                                            :invite #js [matrix-bot-id]}))
+                                            :invite #js [matrix-bot-id]
+                                            }))
+         (p/then (fn [create-room-resp-js]
+                   (.. matrix-client (sendStateEvent
+                                      (.-room_id create-room-resp-js)
+                                      "m.room.history_visibility"
+                                      #js {:history_visibility "invited"}
+                                      ""))))
          (p/catch #()))
      (p/let [room-id-js (.. matrix-client (getRoomIdForAlias (str "#" alias ":" (:matrix-domain env))))
              room-id (.-room_id room-id-js)
@@ -71,11 +78,11 @@
  (fn [{db :db}]
    (if (::support? db)
      {::kick {:room-id (::room-id db)
-                    :user-id matrix-support-id
-                    :on-success [:set ::support? false]}}
+              :user-id matrix-support-id
+              :on-success [:set ::support? false]}}
      {::invite {:room-id (::room-id db)
-                      :user-id matrix-support-id
-                      :on-success [:set ::support? true]}})))
+                :user-id matrix-support-id
+                :on-success [:set ::support? true]}})))
 
 (rf/reg-fx
  ::invite
