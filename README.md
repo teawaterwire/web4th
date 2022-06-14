@@ -14,7 +14,7 @@ this repository is meant to be used as a starter kit for those willing to try we
 4. register a username for `app-id`
 5. sign out and register another username for `support-id`
 6. fill `env` in `config.cljs` with these values (magic-key, app-id, support-id)
-7. `npm run dev`
+7. `npm run dev` (any Java SDK > 8 is needed)
 8. open http://localhost:8280/
 9. log in with a username and Touch ID on desktop (https://magic.link/docs/login-methods/webauthn)
 10. profit
@@ -184,7 +184,7 @@ a decentralized conversation store was the key missing ingredient for a true web
 
 leveraging their work at the protocol level but also at the application level: existing cross platform clients can be used to interact with users (support account)
 
-_for convenience a Matrix homeserver is deployed at matrix.teawaterwire.dev but you can deploy your own relatively easily following this helpful [tutorial](https://pcarion.com/posts/matrix-dendrite-install/)_
+_for convenience a Matrix homeserver is deployed at matrix.teawaterwire.dev but you can deploy your own relatively easily following this helpful [tutorial](https://pcarion.com/posts/matrix-dendrite-install/) (and passing the `--really-enable-open-registration` flag)_
 
 ### ClojureScript
 
