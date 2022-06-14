@@ -25,7 +25,13 @@
 (rf/reg-event-fx
  ::login-webauthn
  (fn [{db :db}]
-   {::login-webauthn (::username db)}))
+   {:db (assoc db ::authenticating? true)
+    ::login-webauthn (::username db)}))
+
+(rf/reg-event-fx
+ ::login-webauthn-finally
+ (fn [{db :db}]
+   {:db (dissoc db ::init? ::authenticating?)}))
 
 (defn matrix-login [username]
   (p/let [metadata-js (.. magic -user (getMetadata))
@@ -41,7 +47,7 @@
    (p/catch #(.. magic -webauthn (login #js {:username username})))
    (p/then #(matrix-login username))
    (p/finally
-     #(rf/dispatch [:set ::init? false]))))
+     #(rf/dispatch [::login-webauthn-finally]))))
 
 (rf/reg-fx
  ::login-webauthn
@@ -59,8 +65,9 @@
 
 (rf/reg-event-fx
  ::logout
- (fn []
-   {::logout nil}))
+ (fn [{db :db}]
+   {:db (dissoc db ::user ::username)
+    ::logout nil}))
 
 (rf/reg-fx
  ::logout
@@ -73,9 +80,15 @@
   [:div {:class "flex mt-20 h-3/4"}
    [:input {:class "rounded-l flex-grow"
             :type "text" :placeholder "Enter username"
+            :disabled @(rf/subscribe [:get ::authenticating?])
+            :onKeyDown #(if (= (.-key %) "Enter") (rf/dispatch [::login-webauthn]))
             :on-change #(rf/dispatch [:set ::username (.. % -target -value)])
             :value @(rf/subscribe [:get ::username])}]
-   [:button {:class "btn-blue rounded-l-none" :on-click #(rf/dispatch [::login-webauthn])} "Log in"]])
+   (if @(rf/subscribe [:get ::authenticating?])
+     [:button {:class "animate-pulse btn-gray rounded-l-none" :disabled true}
+      "Logging in..."]
+     [:button {:class "btn-blue rounded-l-none" :on-click #(rf/dispatch [::login-webauthn])}
+      "Log in"])])
 
 (defn loading-panel []
   [:div {:class "flex mt-20 h-3/4 items-center"}
