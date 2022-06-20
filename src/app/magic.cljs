@@ -15,7 +15,6 @@
 
 (defonce magic-provider (new (.. ethers -providers -Web3Provider) (.-rpcProvider magic)))
 
-
 (rf/reg-event-fx
  ::init
  (fn [{db :db}]
@@ -25,13 +24,18 @@
 (rf/reg-event-fx
  ::login-webauthn
  (fn [{db :db}]
-   {:db (assoc db ::authenticating? true)
+   {:db (assoc db ::authenticating? true ::login-error nil)
     ::login-webauthn (::username db)}))
 
 (rf/reg-event-fx
  ::login-webauthn-finally
  (fn [{db :db}]
    {:db (dissoc db ::init? ::authenticating?)}))
+
+(rf/reg-event-fx
+ ::login-webauthn-error
+ (fn [{db :db} [_ register-error login-error]]
+   {:db (assoc db ::login-error (.-message (or register-error login-error)))}))
 
 (defn matrix-login [username]
   (p/let [metadata-js (.. magic -user (getMetadata))
@@ -44,7 +48,9 @@
 (defn magic-loging-webauthn [username]
   (->
    (.. magic -webauthn (registerNewUser #js {:username username}))
-   (p/catch #(.. magic -webauthn (login #js {:username username})))
+   (p/catch (fn [register-error] 
+              (-> (.. magic -webauthn (login #js {:username username}))
+                  (p/catch (fn [login-error] (rf/dispatch [::login-webauthn-error register-error login-error]))))))
    (p/then #(matrix-login username))
    (p/finally
      #(rf/dispatch [::login-webauthn-finally]))))
@@ -77,26 +83,31 @@
     (js/location.reload))))
 
 (defn login-panel []
-  [:div {:class "flex mt-20 h-3/4"}
-   [:input {:class "rounded-l flex-grow"
-            :type "text" :placeholder "Enter username"
-            :disabled @(rf/subscribe [:get ::authenticating?])
-            :onKeyDown #(if (= (.-key %) "Enter") (rf/dispatch [::login-webauthn]))
-            :on-change #(rf/dispatch [:set ::username (.. % -target -value)])
-            :value @(rf/subscribe [:get ::username])}]
-   (if @(rf/subscribe [:get ::authenticating?])
-     [:button {:class "animate-pulse btn-gray rounded-l-none" :disabled true}
-      "Signing in..."]
-     [:button {:class "btn-blue rounded-l-none" :on-click #(rf/dispatch [::login-webauthn])}
-      "Sign in"])])
+  [:<>
+   [:div {:class "flex"}
+    [:input {:class "rounded-l flex-grow"
+             :type "text" :placeholder "Enter username"
+             :disabled @(rf/subscribe [:get ::authenticating?])
+             :onKeyDown #(if (= (.-key %) "Enter") (rf/dispatch [::login-webauthn]))
+             :on-change #(rf/dispatch [:set ::username (.. % -target -value)])
+             :value @(rf/subscribe [:get ::username])}]
+    (if @(rf/subscribe [:get ::authenticating?])
+      [:button {:class "animate-pulse btn-gray rounded-l-none" :disabled true}
+       "Signing in..."]
+      [:button {:class "btn-blue rounded-l-none disabled:opacity-70" 
+                :disabled (str/blank? @(rf/subscribe [:get ::username]))
+                :on-click #(rf/dispatch [::login-webauthn])}
+       "Sign in"])]
+   [:div {:class "text-center text-xs mt-2 text-red-600/80"}
+       @(rf/subscribe [:get ::login-error])]])
 
 (defn loading-panel []
-  [:div {:class "flex mt-20 h-3/4 items-center"}
+  [:div {:class "flex items-center"}
    [:div {:class "animate-pulse text-center flex-grow text-9xl"}
     "🧇"]])
 
 (defn main-panel []
-  [:div {:class "container mx-auto max-w-xl h-screen py-2 flex flex-col"}
+  [:div {:class "container mx-auto max-w-xl h-screen py-2 flex flex-col justify-center"}
    (cond
      (true? @(rf/subscribe [:get ::init?])) [loading-panel]
      (nil? @(rf/subscribe [:get ::user])) [login-panel]

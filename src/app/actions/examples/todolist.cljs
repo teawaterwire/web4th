@@ -42,7 +42,7 @@
           [:br]
           [:button {:class "btn-blue mt-2"
                     :on-click #(actions/send ::todos [@items])}
-           "Save"]])])))
+           "Save current state"]])])))
 
 (defmethod actions/get-action ::todos
   [_ _ args]
