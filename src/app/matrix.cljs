@@ -77,26 +77,29 @@
  ::toggle-chat-with-support
  (fn [{db :db}]
    (if (::support? db)
-     {::kick {:room-id (::room-id db)
-              :user-id matrix-support-id
-              :on-success [:set ::support? false]}}
-     {::invite {:room-id (::room-id db)
-                :user-id matrix-support-id
-                :on-success [:set ::support? true]}})))
+     {::matrix-client {:method "kick"
+                       :args [(::room-id db) matrix-support-id]
+                       :on-success [:set ::support? false]
+                       :on-error [::on-chat-with-support-kick-error]}}
+     {::matrix-client {:method "invite"
+                       :args [(::room-id db) matrix-support-id]
+                       :on-success [:set ::support? true]}})))
+
+;; limitation of current version of dendrite
+;; "cannot kick users from a room they are not in"
+(rf/reg-event-fx
+ ::on-chat-with-support-kick-error
+ (fn [_ [_ error]]
+   (if (= (.-message error) "cannot /kick banned or left users")
+     {:dispatch [:set ::support? false]})))
 
 (rf/reg-fx
- ::invite
- (fn [{:keys [:room-id :user-id :on-success]}]
-   (let [prom (.. matrix-client (invite room-id user-id))]
+ ::matrix-client
+ (fn [{:keys [:method :args :on-success :on-error]}]
+   (let [prom (apply js-invoke matrix-client method args)]
      (cond-> prom
-       (some? on-success) (p/then #(rf/dispatch on-success))))))
-
-(rf/reg-fx
- ::kick
- (fn [{:keys [:room-id :user-id :on-success]}]
-   (let [prom (.. matrix-client (kick room-id user-id))]
-     (cond-> prom
-       (some? on-success) (p/then #(rf/dispatch on-success))))))
+       (some? on-success) (p/then #(rf/dispatch on-success))
+       (some? on-error) (p/catch #(rf/dispatch (conj on-error %)))))))
 
 (rf/reg-event-fx
  ::send-burp
