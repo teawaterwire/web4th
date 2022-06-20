@@ -155,7 +155,10 @@
 (defn chat []
   [:<> 
    [messages]
-   [:div {:class "rounded-b-xl bg-gradient-to-r from-gray-200 to-gray-300 p-4"}
+   [:div {:class (str "rounded-b-xl bg-gradient-to-r p-4 "
+                      (if @(rf/subscribe [:get ::support?])
+                        "from-red-100 to-purple-200"
+                        "from-green-100 to-blue-200"))}
        [:input {:type "text" :class "w-full rounded-xl"
                 :placeholder "Enter text or select action below"
                 :on-change #(rf/dispatch [:set ::burp (.. % -target -value)])
