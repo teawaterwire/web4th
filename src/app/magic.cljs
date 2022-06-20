@@ -86,9 +86,9 @@
             :value @(rf/subscribe [:get ::username])}]
    (if @(rf/subscribe [:get ::authenticating?])
      [:button {:class "animate-pulse btn-gray rounded-l-none" :disabled true}
-      "Logging in..."]
+      "Signing in..."]
      [:button {:class "btn-blue rounded-l-none" :on-click #(rf/dispatch [::login-webauthn])}
-      "Log in"])])
+      "Sign in"])])
 
 (defn loading-panel []
   [:div {:class "flex mt-20 h-3/4 items-center"}
@@ -107,5 +107,5 @@
        @(rf/subscribe [:get ::user :username]) " • "
        [:a {:class "hover:underline text-blue-600 cursor-pointer"
             :on-click #(rf/dispatch [::logout])}
-        "Log out"]]])])
+        "Sign out"]]])])
 
