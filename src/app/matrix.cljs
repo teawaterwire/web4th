@@ -59,18 +59,11 @@
     (if available? (actions/send :app.actions.onboarding/onboarding [magic-username]))
     (.-access_token login-resp-js)))
 
-(defn fill-state [state-to-fill db]
-  (->> state-to-fill
-       (map (fn [[k path-strs]]
-              [k (get-in db (map keyword path-strs))]))
-       (into {})))
-
 (rf/reg-event-fx
  ::add-to-timeline
  (fn [{db :db} [_ event]]
-   (let [{:keys [state-to-fill action state]} (try (cljs.reader/read-string (-> event :content :body)) (catch js/Object _ nil)) 
-         state' (merge state (fill-state state-to-fill db))
-         event' (merge-with merge event {:content {:action action :state state'}})]
+   (let [{:keys [action state]} (try (cljs.reader/read-string (-> event :content :body)) (catch js/Object _ nil))
+         event' (merge-with merge event {:content {:action action :state state}})]
      {:db (update-in db [::timeline] (fn [timeline] (conj (or timeline []) event')))})))
 
 (rf/reg-event-fx
