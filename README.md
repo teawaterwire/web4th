@@ -2,22 +2,23 @@
 
 web4ᵗʰ or "temporal web" is a paradigm where time is added as a new dimension for user interactions on the web: the fourth dimension 🔮
 
-the rationale can be found here: https://mirror.xyz/penseur.eth/mvqOkcw0ABBgRjSD49Pb_V3lbpQMxxi68KCHabYj5RA
+the rationale can be found [here](https://mirror.xyz/penseur.eth/mvqOkcw0ABBgRjSD49Pb_V3lbpQMxxi68KCHabYj5RA)
 
 this repository is meant to be used as a starter kit for those willing to try web4ᵗʰ at their next company hackathon or from the comfort of their homes
 
 ## install
 
-1. `npm install`
-2. get "publishable api key" from https://magic.link/ and enable "WebAuthn" in the "Passwordless login" section
-3. go to https://app.element.io/#/register and change "matrix.org" to "https://matrix.teawaterwire.dev"
-4. register a username for `app-id`
-5. sign out and register another username for `support-id`
-6. fill `env` in `config.cljs` with these values (magic-key, app-id, support-id)
-7. `npm run dev` (any Java SDK > 8 is needed)
-8. open http://localhost:8280/
-9. log in with a username and Touch ID on desktop (https://magic.link/docs/login-methods/webauthn)
-10. profit
+1. `git clone git@github.com:teawaterwire/web4th.git && cd web4th`
+
+2. `npm install`
+
+3. `npm run dev` (any Java SDK > 8 is needed)
+
+4. open http://localhost:8280/
+
+5. log in with a username and Touch ID ([desktop only](https://magic.link/docs/auth/login-methods/webauthn))
+
+6. profit
 
 ## develop
 
@@ -121,7 +122,9 @@ _what's the point of this?_
 - being able to keep and navigate to all previous important states of the application unlocks new capabilities
 - for example, users can go back in time to components and trigger different actions that will "branch off" to a different present 🤯
 
-## command bar
+## nonobvious things
+
+### command bar
 
 let's talk about the section at the bottom of the screen: the command bar
 
@@ -136,13 +139,37 @@ it's grouping three features:
    - filter through primary and non-default actions
    - just write anything like on a notebook
 
-## support
+### support
 
-to understand what is support as first-class citizen, sign in on https://app.element.io/ with the `support-id` account
+to understand what is support as first-class citizen:
+
+1. go to https://app.element.io/#/register
+
+2. change "matrix.org" to "https://matrix.teawaterwire.dev"
+
+3. choose a username/password and click "register"
+
+4. replace "support" with your username in `src/app/config.cljs`
 
 then back from the application click "Start chat with support"
 
+this will invite the support account you created in the "conversation" between the app and the end-user
+
 on the support side you can now send messages to the user, but more importantly also actions that will be displayed as components!
+
+### app-id
+
+you might wonder what is this `app-id` in the config file... glad you asked!
+
+the history of interactions between the user and the app is stored as messages in a chat room
+
+when the user signs up this "room" is created and the account `app-id` immediately invited
+
+later on the `support-id` will be invited and kicked again from the room depending on what the end user wants
+
+but the `app-id` will always stay in the room, as if it was an admin account with access to the entire history of the user's interactions
+
+_(you can register your own app account the same way you registered the support account)_
 
 ## release
 
@@ -177,6 +204,8 @@ a private key / public key provided by crypto wallet was the first guess, but fr
 using biometrics to authenticate is frictionless, albeit supported only on desktop at the moment — that's a trade-off
 
 behind the hood Magic provides private public-key cryptography, which is used to authenticate on Matrix protocol
+
+_for convenience a Magic key is provided by default but you should probably register your own at some point (get "publishable api key" from [here](https://magic.link/) and enable "WebAuthn" in the "Passwordless login" section)_
 
 ### Matrix
 
