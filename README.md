@@ -18,7 +18,9 @@ this repository is meant to be used as a starter kit for those willing to try we
 
 5. log in with a username and Touch ID ("This device" — [desktop only](https://magic.link/docs/auth/login-methods/webauthn))
 
-6. profit
+6. profit (you should see something like this 👇)
+
+<img width="1331" alt="image" src="https://user-images.githubusercontent.com/1702973/190591651-e42f2775-79db-40da-9ce9-f5bb58e7c9d4.png">
 
 ## develop
 
