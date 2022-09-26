@@ -14,7 +14,7 @@ this repository is meant to be used as a starter kit for those willing to try we
 
 3. `npm run dev` (any Java SDK > 8 is needed)
 
-4. open http://localhost:8280/
+4. wait for the build to complete and open http://localhost:8280/
 
 5. log in with a username and Touch ID ("This device" — [desktop only](https://magic.link/docs/auth/login-methods/webauthn))
 
