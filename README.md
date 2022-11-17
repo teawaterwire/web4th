@@ -24,7 +24,7 @@ this repository is meant to be used as a starter kit for those willing to try we
 
 ## develop
 
-it's all about adding actions
+it's all about adding actions and mapping them to components
 
 ### 1, 2, 3, 4ᵗʰ steps:
 
