@@ -2,6 +2,7 @@
 
  :dependencies
  [[re-frame "1.2.0"]
+  [akiroz.re-frame/storage "0.1.4"]
   [funcool/promesa "8.0.450"]
 
   [binaryage/devtools "1.0.6"]

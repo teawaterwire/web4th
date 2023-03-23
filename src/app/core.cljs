@@ -2,15 +2,18 @@
   (:require 
    [reagent.dom :as rdom]
    [re-frame.core :as rf]
-   [app.magic :as magic]
+   [akiroz.re-frame.storage :refer [reg-co-fx!]]
+   [app.auth :as auth]
    [app.utils]
    [app.actions.registry]))
+
+(reg-co-fx! :web4th {:fx :store :cofx :store}) 
 
 (defn ^:dev/after-load mount-root []
   (rf/clear-subscription-cache!)
   (let [root-el (.getElementById js/document "app")]
     (rdom/unmount-component-at-node root-el)
-    (rdom/render [magic/main-panel] root-el)))
+    (rdom/render [auth/main-panel] root-el)))
 
 (defn init []
   (rf/dispatch-sync [::init])
@@ -19,5 +22,7 @@
 (rf/reg-event-fx
  ::init
  (fn []
-   {:dispatch [:app.magic/init]}))
+   {:dispatch [:app.auth/init]}))
+
+
 

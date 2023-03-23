@@ -19,7 +19,8 @@
     [:button {:class "text-blue-500 hover:underline font-bold"
               :on-click #(actions/send :app.actions.examples.todolist/todos)} "Todo list"]]
    [:br]
-   [:div.italic "Need help " (:username state) "? Just start a chat with support"]])
+   [:div.italic.text-left "Want to keep this session? Save the session id found below." [:br] 
+    "Need help? Just start a chat with support!"]])
 
 (defmethod actions/get-action ::onboarding
   [_ _ args]

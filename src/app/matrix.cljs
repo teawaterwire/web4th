@@ -48,7 +48,7 @@
                           (if (= room-id (.-roomId room))
                             (rf/dispatch [::add-to-timeline (j->c (.-event event))]))))))
 
-(defn matrix-login [username password {:keys [:magic-username]}]
+(defn matrix-login [username password]
   (p/let [available? (.. matrix-client (isUsernameAvailable username))
           _ (if available? (matrix-register username password))
           login-resp-js (.. matrix-client (login "m.login.password" #js {:user username :password password}))
@@ -56,7 +56,7 @@
     (matrix-sync room-id)
     (.. matrix-client (startClient #js {:initialSyncLimit 20}))
     (rf/dispatch [:set ::room-id room-id])
-    (if available? (actions/send :app.actions.onboarding/onboarding [magic-username]))
+    (if available? (actions/send :app.actions.onboarding/onboarding))
     (.-access_token login-resp-js)))
 
 (rf/reg-event-fx
