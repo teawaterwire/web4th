@@ -33,9 +33,10 @@
 (rf/reg-fx
  ::init
  (fn [store]
-   (if-let [secret (:secret store)] 
-     (matrix-login secret))
-   (rf/dispatch [:set ::init? false])))
+   (p/do!
+    (if-let [secret (:secret store)]
+      (matrix-login secret))
+    (rf/dispatch [:set ::init? false]))))
 
 (rf/reg-event-fx
  ::load-session
@@ -61,7 +62,7 @@
 
 (rf/reg-event-fx
  ::logout
- (fn [{db :db}]
+ (fn []
    {:db nil
     :store {}
     ::logout nil}))
