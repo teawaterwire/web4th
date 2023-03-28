@@ -2,7 +2,7 @@
   (:require 
    [app.actions.entrypoint :as actions]))
 
-(defn c-onboarding [state]
+(defn c-onboarding []
   [:div.text-center
    [:span.font-bold.text-xl "Welcome to a  "
     [:a.underline {:href "https://mirror.xyz/penseur.eth/mvqOkcw0ABBgRjSD49Pb_V3lbpQMxxi68KCHabYj5RA" :target "_blank"} "web4ᵗʰ"]
