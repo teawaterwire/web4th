@@ -16,11 +16,11 @@ this repository is meant to be used as a starter kit for those willing to try we
 
 4. wait for the build to complete and open http://localhost:8280/
 
-5. log in with a username and Touch ID ("This device" — [desktop only](https://magic.link/docs/auth/login-methods/webauthn))
+5. create new session
 
 6. profit (you should see something like this 👇)
 
-<img width="1331" alt="image" src="https://user-images.githubusercontent.com/1702973/190591651-e42f2775-79db-40da-9ce9-f5bb58e7c9d4.png">
+<img width="1436" alt="image" src="https://user-images.githubusercontent.com/1702973/228198185-35cdf064-68c4-47cd-b345-b9d8dff2658a.png">
 
 ## develop
 
@@ -198,17 +198,19 @@ need help plz 🎨 (using [Tailwind](https://tailwindcss.com/) btw - it's great)
 
 choices were made
 
-### Magic
+### Sessions
 
 authentication is inevitable but has to be as frictionless as possible
 
 a private key / public key provided by crypto wallet was the first guess, but friction was still there
 
-using biometrics to authenticate is frictionless, albeit supported only on desktop at the moment — that's a trade-off
+using biometrics to authenticate is frictionless, but support was limited (only on desktop with magic.link)
 
-behind the hood Magic provides private public-key cryptography, which is used to authenticate on Matrix protocol
+it was finally decided to identify a user by a session `id` that is randomly generated upon creation
 
-_for convenience a Magic key is provided by default but you should probably register your own at some point (get "publishable api key" from [here](https://magic.link/) and enable "WebAuthn" in the "Passwordless login" section)_
+a user can save that `id` to "load" the session on another browser if needed
+
+_it is up to the app developer to add other auth systems within a session (allowing for instance different crypto wallets to be connected under the same session)_
 
 ### Matrix
 
