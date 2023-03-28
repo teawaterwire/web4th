@@ -160,7 +160,7 @@
                 :on-change #(rf/dispatch [:set ::burp (.. % -target -value)])
                 :value @(rf/subscribe [:get ::burp])
                 :onKeyDown #(if (= (.-key %) "Enter") (rf/dispatch [::send-burp]))}]
-       [:div {:class "py-2 place-content-between flex"}
+       [:div {:class "py-2 place-content-between flex flex-wrap gap-y-2"}
         [:div
          (for [[label {:keys [action]}] @(rf/subscribe [::available-actions])]
            ^{:key label}
