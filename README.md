@@ -188,7 +188,7 @@ using [Cloudflare Pages](https://pages.cloudflare.com/) it's as simple as connec
 >
 > Environment variables: `NODE_VERSION` = 16
 
-click "Save and Deploy" and voilà 💫
+choose "Build system version 1", click "Save and Deploy" and voilà 💫
 
 ## style
 
