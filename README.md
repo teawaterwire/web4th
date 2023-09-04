@@ -176,7 +176,7 @@ _(you can register your own app account the same way you registered the support 
 
 ## release
 
-this repository comes with a GitHub workflow that builds and deploys to Github Pages
+this repository comes with a [GitHub workflow](https://github.com/teawaterwire/web4th/blob/master/.github/workflows/build-and-deploy.yml) that builds and deploys to Github Pages
 
 this can be triggered manually or on every push to the `master` branch
 
