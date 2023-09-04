@@ -8,7 +8,7 @@ this repository is meant to be used as a starter kit for those willing to try we
 
 ## install
 
-1. `git clone git@github.com:teawaterwire/web4th.git && cd web4th`
+1. click the button "Use this template" above, or `git clone git@github.com:teawaterwire/web4th.git && cd web4th`
 
 2. `npm install`
 
@@ -176,19 +176,11 @@ _(you can register your own app account the same way you registered the support 
 
 ## release
 
-using [Cloudflare Pages](https://pages.cloudflare.com/) it's as simple as connecting your GitHub repository and adding these settings:
+this repository comes with a GitHub workflow that builds and deploys to Github Pages
 
-> Framework preset: `None`
->
-> build command: `npm run release`
->
-> Build output directory: `/resources/public`
->
-> Root directory: `/`
->
-> Environment variables: `NODE_VERSION` = 16
+this can be triggered manually or on every push to the `master` branch
 
-choose "Build system version 1", click "Save and Deploy" and voilà 💫
+_(you either need your repository to be public or have a paid account)_
 
 ## style
 

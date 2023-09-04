@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches: ["master"]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install deps
+        run: npm install
+
+      - name: Build artifact
+        run: npm run release
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2.0.0
+        with:
+          path: resources/public
+
+  deploy:
+    needs: build
+
+    permissions:
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
