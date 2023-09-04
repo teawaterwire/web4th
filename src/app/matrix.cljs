@@ -10,7 +10,7 @@
    [app.actions.entrypoint :as actions]
    ["matrix-js-sdk" :as matrix]))
 
-(defonce matrix-client (matrix/createClient (str "https://" (:matrix-domain env))))
+(defonce matrix-client (matrix/createClient (clj->js {:baseUrl (str "https://" (:matrix-domain env))}) ))
 
 (def matrix-bot-id (str "@" (:app-id env) ":" (:matrix-domain env)))
 

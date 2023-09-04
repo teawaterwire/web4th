@@ -24,7 +24,7 @@
     "tailwindcss": "^3.0.24"
   },
   "dependencies": {
-    "matrix-js-sdk": "^20.1.0",
+    "matrix-js-sdk": "24.1.0",
     "react": "17.0.1",
     "react-dom": "17.0.1"
   }
