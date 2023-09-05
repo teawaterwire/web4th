@@ -180,6 +180,8 @@ this repository comes with a [GitHub workflow](https://github.com/teawaterwire/w
 
 this can be triggered manually or on every push to the `master` branch
 
+enable "GitHub Actions" under _Settings_ > _Pages_ > _Build and deployment_
+
 _(you either need your repository to be public or have a paid account)_
 
 ## style
