@@ -92,6 +92,8 @@ you can find examples (hello, pingpong, todolist) under the [actions/examples](h
 
 just comment the line in `src/app/actions/registry.cljs` if you want to deactivate them without deleting the code
 
+_(a real-world example can be found here: https://github.com/teawaterwire/art)_
+
 ### onboarding
 
 there's a special action called `:app.actions.onboarding/onboarding` that is triggered automatically when the user logs in the first time
