@@ -1,5 +1,7 @@
 # web4ᵗʰ
 
+**(NOT CRYPTO RELATED)**
+
 web4ᵗʰ or "temporal web" is a paradigm where time is added as a new dimension for user interactions on the web: the fourth dimension 🔮
 
 the rationale can be found [here](https://mirror.xyz/penseur.eth/mvqOkcw0ABBgRjSD49Pb_V3lbpQMxxi68KCHabYj5RA)
