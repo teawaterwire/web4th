@@ -4,7 +4,9 @@
 
 web4ᵗʰ or "temporal web" is a paradigm where time is added as a new dimension for user interactions on the web: the fourth dimension 🔮
 
-the rationale can be found [here](https://mirror.xyz/penseur.eth/mvqOkcw0ABBgRjSD49Pb_V3lbpQMxxi68KCHabYj5RA)
+the rationale can be found [here](https://mirror.xyz/penseur.eth/mvqOkcw0ABBgRjSD49Pb_V3lbpQMxxi68KCHabYj5RA) and a 5-minute screencast below:
+
+[![](https://cdn.loom.com/sessions/thumbnails/17684f3b6cf14f2297b8db6002d3a210-1704475708478-with-play.gif)](https://www.loom.com/share/17684f3b6cf14f2297b8db6002d3a210 "The Temporal Web — in 5 minutes")
 
 this repository is meant to be used as a starter kit for those willing to try web4ᵗʰ at their next company hackathon or from the comfort of their homes
 
